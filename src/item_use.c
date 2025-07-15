@@ -70,6 +70,8 @@ static void Task_UseRepel(u8);
 static void Task_CloseCantUseKeyItemMessage(u8);
 static void SetDistanceOfClosestHiddenItem(u8, s16, s16);
 static void CB2_OpenPokeblockFromBag(void);
+static void ExpShareDisplayOnMessage(u8);
+static void ExpShareDisplayOffMessage(u8);
 
 // EWRAM variables
 EWRAM_DATA static void(*sItemUseOnFieldCB)(u8 taskId) = NULL;
@@ -1143,20 +1145,28 @@ void ItemUseOutOfBattle_ExpShare(u8 taskId)
     {
         FlagSet(FLAG_EXP_SHARE);
         PlaySE(SE_EXP_MAX);
-        ExpShareDisplayMessage(taskId);
+        ExpShareDisplayOnMessage(taskId);
     }
     else
     {
         FlagClear(FLAG_EXP_SHARE);
         PlaySE(SE_PC_OFF);
-        ExpShareDisplayMessage(taskId);
+        ExpShareDisplayOffMessage(taskId);
     }
 }
 
-void ExpShareDisplayMessage(u8 taskId)
+void ExpShareDisplayOnMessage(u8 taskId)
 {
     if (gTasks[taskId].tUsingRegisteredKeyItem) // to account for pressing seelct in the overworld
             DisplayItemMessageOnField(taskId, gText_ExpShareTurnOn, Task_CloseCantUseKeyItemMessage);
+    else    
+        DisplayItemMessage(taskId, 1, gText_ExpShareTurnOn, CloseItemMessage);
+}
+
+void ExpShareDisplayOffMessage(u8 taskId)
+{
+    if (gTasks[taskId].tUsingRegisteredKeyItem) // to account for pressing seelct in the overworld
+            DisplayItemMessageOnField(taskId, gText_ExpShareTurnOff, Task_CloseCantUseKeyItemMessage);
     else    
         DisplayItemMessage(taskId, 1, gText_ExpShareTurnOff, CloseItemMessage);
 }

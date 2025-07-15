@@ -134,6 +134,11 @@ ifeq ($(DINFO),1)
   override CFLAGS += -g
 endif
 
+ifeq ($(DDEBUGGING), 1)
+override ASFLAGS += --defsym DEBUGGING=1
+override CPPFLAGS += -D DEBUGGING=1
+endif
+
 # Variable filled out in other make files
 AUTO_GEN_TARGETS :=
 include make_tools.mk
