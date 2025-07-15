@@ -1136,4 +1136,29 @@ void ItemUseOutOfBattle_CannotUse(u8 taskId)
     DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
 }
 
+void ItemUseOutOfBattle_ExpShare(u8 taskId)
+{
+    bool8 expShareOn = FlagGet(FLAG_EXP_SHARE);
+    if (!expShareOn)
+    {
+        FlagSet(FLAG_EXP_SHARE);
+        PlaySE(SE_EXP_MAX);
+        ExpShareDisplayMessage(taskId);
+    }
+    else
+    {
+        FlagClear(FLAG_EXP_SHARE);
+        PlaySE(SE_PC_OFF);
+        ExpShareDisplayMessage(taskId);
+    }
+}
+
+void ExpShareDisplayMessage(u8 taskId)
+{
+    if (gTasks[taskId].tUsingRegisteredKeyItem) // to account for pressing seelct in the overworld
+            DisplayItemMessageOnField(taskId, gText_ExpShareTurnOn, Task_CloseCantUseKeyItemMessage);
+    else    
+        DisplayItemMessage(taskId, 1, gText_ExpShareTurnOff, CloseItemMessage);
+}
+
 #undef tUsingRegisteredKeyItem
